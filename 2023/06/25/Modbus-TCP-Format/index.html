@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Modbus通信協定介紹 - Modbus TCP封包 | Ferris&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="在Modbus通信協定介紹中我們提到，如果Modbus設備之間是以TCP&#x2F;IP進行通訊時，我們可以採用Modbus TCP的協定版進行通訊，在本文中我們將介紹Modbus設備在傳送Modbus TCP封包時的封包格式，以及每個欄位的定義。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Modbus通信協定介紹 - Modbus TCP封包">
+<meta property="og:url" content="https://ferrishuang1998.github.io/2023/06/25/Modbus-TCP-Format/index.html">
+<meta property="og:site_name" content="Ferris&#39;s Blog">
+<meta property="og:description" content="在Modbus通信協定介紹中我們提到，如果Modbus設備之間是以TCP&#x2F;IP進行通訊時，我們可以採用Modbus TCP的協定版進行通訊，在本文中我們將介紹Modbus設備在傳送Modbus TCP封包時的封包格式，以及每個欄位的定義。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://i.imgur.com/6rfPkyw.png">
+<meta property="og:image" content="https://i.imgur.com/llp40QF.png">
+<meta property="og:image" content="https://i.imgur.com/oVYdgSu.png">
+<meta property="og:image" content="https://i.imgur.com/MiYjO5y.png">
+<meta property="og:image" content="https://i.imgur.com/MiYjO5y.png">
+<meta property="og:image" content="https://i.imgur.com/RyY1U1w.png">
+<meta property="og:image" content="https://i.imgur.com/RyY1U1w.png">
+<meta property="og:image" content="https://i.imgur.com/y1RSGjO.png">
+<meta property="og:image" content="https://i.imgur.com/d2mkGL1.png">
+<meta property="article:published_time" content="2023-06-25T06:53:00.000Z">
+<meta property="article:modified_time" content="2023-06-26T09:10:35.298Z">
+<meta property="article:author" content="Ferris Huang">
+<meta property="article:tag" content="Modbus Protocol">
+<meta property="article:tag" content="Modbus通信協定">
+<meta property="article:tag" content="Modbus TCP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/6rfPkyw.png">
+  
+  
+    <link rel="shortcut icon" href="/imgs/favicon.ico">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Ferris&#39;s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">程式筆記 &amp; 嵌入式開發</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/FerrisHuang1998/"><span class="fa fa-github"></span></a>
+          
+        
+        
+        <a class="nav-icon nav-search-btn" title="搜尋"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜尋"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://FerrisHuang1998.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Modbus-TCP-Format" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/06/25/Modbus-TCP-Format/" class="article-date">
+  <time class="dt-published" datetime="2023-06-25T06:53:00.000Z" itemprop="datePublished">2023-06-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%80%9A%E8%A8%8A%E5%8D%94%E5%AE%9A/">通訊協定</a>►<a class="article-category-link" href="/categories/%E9%80%9A%E8%A8%8A%E5%8D%94%E5%AE%9A/Modbus/">Modbus</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Modbus通信協定介紹 - Modbus TCP封包
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>在<a href="">Modbus通信協定介紹</a>中我們提到，如果Modbus設備之間是以TCP&#x2F;IP進行通訊時，我們可以採用Modbus TCP的協定版進行通訊，在本文中我們將介紹Modbus設備在傳送Modbus TCP封包時的封包格式，以及每個欄位的定義。</p>
+<span id="more"></span>
+
+<h2 id="Table-of-Contents"><a href="#Table-of-Contents" class="headerlink" title="Table of Contents"></a>Table of Contents</h2><ul>
+<li><p><a href="#modbus-tcp%E5%B0%81%E5%8C%85%E6%A0%BC%E5%BC%8F">Modbus TCP封包格式</a></p>
+<ul>
+<li><p><a href="#read-coil-status%E8%AE%80%E5%8F%96do%E7%8B%80%E6%85%8B-fc--0x01">Read Coil Status(讀取DO狀態)</a></p>
+</li>
+<li><p><a href="#read-input-status%E8%AE%80%E5%8F%96di%E7%8B%80%E6%85%8B-fc--0x02">Read Input Status(讀取DI狀態)</a></p>
+</li>
+<li><p><a href="#read-holding-registers%E8%AE%80%E5%8F%96ao%E7%8B%80%E6%85%8B-fc--0x03">Read Holding Registers(讀取AO狀態)</a></p>
+</li>
+<li><p><a href="#read-input-registers%E8%AE%80%E5%8F%96ai%E7%8B%80%E6%85%8B-fc--0x04">Read Input Registers(讀取AI狀態)</a></p>
+</li>
+<li><p><a href="#force-single-coil%E5%AF%AB%E5%85%A5%E5%96%AE%E5%80%8Bdo%E7%8B%80%E6%85%8B-fc--0x05">Force Single Coil(寫入單個DO狀態)</a></p>
+</li>
+<li><p><a href="#preset-single-register%E5%AF%AB%E5%85%A5%E5%96%AE%E5%80%8Bao%E7%8B%80%E6%85%8B-fc--0x06">Preset Single Register(寫入單個AO狀態)</a></p>
+</li>
+<li><p><a href="#force-multiple-coils%E5%AF%AB%E5%85%A5%E5%A4%9A%E5%80%8Bdo%E7%8B%80%E6%85%8B-fc--0x0f">Force Multiple Coils(寫入多個DO狀態)</a></p>
+</li>
+<li><p><a href="#force-multiple-registers%E5%AF%AB%E5%85%A5%E5%A4%9A%E5%80%8Bao%E7%8B%80%E6%85%8B-fc--0x10">Force Multiple Registers(寫入多個AO狀態)</a></p>
+</li>
+</ul>
+</li>
+<li><p><a href="#references">References</a></p>
+</li>
+</ul>
+<h2 id="Modbus-TCP封包格式"><a href="#Modbus-TCP封包格式" class="headerlink" title="Modbus TCP封包格式"></a>Modbus TCP封包格式</h2><p><img src="https://i.imgur.com/6rfPkyw.png" alt="Modbus TCP封包格式"></p>
+<p>在Modbus TCP封包中，Header的資料包含了以下欄位:</p>
+<table>
+<thead>
+<tr>
+<th align="left">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Transaction ID</td>
+<td align="left">用來識別這次通訊的識別碼，其值為隨機值</td>
+</tr>
+<tr>
+<td align="left">Protocol ID</td>
+<td align="left">協定識別碼，用來識別是採用何種通訊協定，Modbus TCP協定則固定填入0</td>
+</tr>
+<tr>
+<td align="left">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="left">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+</tbody></table>
+<p>Modbus PDU的部分，Data欄位是根據功能碼(在此簡稱FC)而定，以下將介紹各個FC所組成的Modbus TCP封包。</p>
+<h3 id="Read-Coil-Status-讀取DO狀態-FC-x3D-0x01"><a href="#Read-Coil-Status-讀取DO狀態-FC-x3D-0x01" class="headerlink" title="Read Coil Status(讀取DO狀態), FC &#x3D; 0x01"></a>Read Coil Status(讀取DO狀態), FC &#x3D; 0x01</h3><p><img src="https://i.imgur.com/llp40QF.png" alt="Read Coil Status"></p>
+<p>圖中由上而下為封包的起始欄位至結束欄位，<code>Byte</code>為資料的順序，<code>Request Field Name</code>為Modbus Master所發出的Modbus命令的各個欄位名稱，<code>Response Field Name</code>為Modbus Slave所回傳的Modbus命令的各個欄位名稱。</p>
+<ul>
+<li>Request Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要讀取線圈(DO)狀態的起始位址</td>
+</tr>
+<tr>
+<td align="center">Quantity of Coils</td>
+<td align="left">要讀取的線圈(DO)數量</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Response Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Byte Count</td>
+<td align="left">The Value of Coils的資料長度</td>
+</tr>
+<tr>
+<td align="center">The Value of Coils</td>
+<td align="left">讀取到的線圈(DO)的狀態值(ON&#x2F;OFF)</td>
+</tr>
+</tbody></table>
+<p>在Response中，由於線圈的狀態值大小是<strong>1 bit</strong>(ON&#x2F;OFF)，因此，假設要讀取的線圈(DO)數量為10個時，Byte Count的值就會是<strong>2 Bytes</strong>。另外，在Response中所讀取到的狀態值，是由最低位元的線圈(DO)開始。以下為一範例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Modbus Request =  3e 7d 00 00 00 06 01 01 00 0d 00 0a</span><br><span class="line">Modbus Response = 3e 7d 00 00 00 05 01 01 02 35 02</span><br></pre></td></tr></table></figure>
+
+<p>在範例中，我們可取得以下結果:</p>
+<ul>
+<li><p>Transaction ID為 <code>0x3e 0x7d</code></p>
+</li>
+<li><p>Slave ID為 <code>0x01</code></p>
+</li>
+<li><p>FC為 <code>0x01</code></p>
+</li>
+<li><p>Start Address為 <code>0x00 0x0d</code>(假設為DO13)</p>
+</li>
+<li><p>Quantity of Coils為 <code>0x0a</code>(10個DO)</p>
+</li>
+<li><p>Byte Count為 <code>0x02</code>(2 Bytes)</p>
+</li>
+<li><p>The Value of Coils為 <code>0x35 0x02</code>，因此，DO20~DO13為 <code>00110101</code>，DO22~DO21為 <code>10</code></p>
+</li>
+</ul>
+<h3 id="Read-Input-Status-讀取DI狀態-FC-x3D-0x02"><a href="#Read-Input-Status-讀取DI狀態-FC-x3D-0x02" class="headerlink" title="Read Input Status(讀取DI狀態), FC &#x3D; 0x02"></a>Read Input Status(讀取DI狀態), FC &#x3D; 0x02</h3><p><img src="https://i.imgur.com/oVYdgSu.png" alt="Read Input Status"></p>
+<ul>
+<li>Request Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要讀取輸入(DI)狀態的起始位址</td>
+</tr>
+<tr>
+<td align="center">Quantity of Inputs</td>
+<td align="left">要讀取的輸入(DI)數量</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Response Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Byte Count</td>
+<td align="left">The Value of Inputs的資料長度</td>
+</tr>
+<tr>
+<td align="center">The Value of Inputs</td>
+<td align="left">讀取到的輸入(DI)的狀態值(ON&#x2F;OFF)</td>
+</tr>
+</tbody></table>
+<p>在Response中，由於輸入的狀態值大小是<strong>1 bit</strong>(ON&#x2F;OFF)，因此，假設要讀取的輸入(DI)數量為10個時，Byte Count的值就會是<strong>2 Bytes</strong>。另外，在Response中所讀取到的狀態值，是由最低位元的輸入(DI)開始。以下為一範例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Modbus Request =  1e 7c 00 00 00 06 01 02 01 00 00 10</span><br><span class="line">Modbus Response = 1e 7c 00 00 00 05 01 02 02 7e 3f</span><br></pre></td></tr></table></figure>
+
+<p>在範例中，我們可取得以下結果:</p>
+<ul>
+<li><p>Transaction ID為 <code>0x1e 0x7c</code></p>
+</li>
+<li><p>Slave ID為 <code>0x01</code></p>
+</li>
+<li><p>FC為 <code>0x02</code></p>
+</li>
+<li><p>Start Address為 <code>0x01 0x00</code>(假設為DI0)</p>
+</li>
+<li><p>Quantity of Coils為 <code>0x10</code>(16個DI)</p>
+</li>
+<li><p>Byte Count為 <code>0x02</code>(2 Bytes)</p>
+</li>
+<li><p>The Value of Coils為 <code>0x7e 0x3f</code>，因此，DI7~DI0為 <code>01111110</code>，DI15~DI8為 <code>00111111</code></p>
+</li>
+</ul>
+<h3 id="Read-Holding-Registers-讀取AO狀態-FC-x3D-0x03"><a href="#Read-Holding-Registers-讀取AO狀態-FC-x3D-0x03" class="headerlink" title="Read Holding Registers(讀取AO狀態), FC &#x3D; 0x03"></a>Read Holding Registers(讀取AO狀態), FC &#x3D; 0x03</h3><p><img src="https://i.imgur.com/MiYjO5y.png" alt="Read Holding Registers"></p>
+<ul>
+<li>Request Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要讀取暫存器(AO)的起始位址</td>
+</tr>
+<tr>
+<td align="center">Quantity of Registers</td>
+<td align="left">要讀取的暫存器(AO)數量</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Response Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Byte Count</td>
+<td align="left">The Value of Registers的資料長度</td>
+</tr>
+<tr>
+<td align="center">The Value of Registers</td>
+<td align="left">讀取到的暫存器(AO)的數值</td>
+</tr>
+</tbody></table>
+<p>在Response中，由於暫存器的數值大小是<strong>2 Bytes</strong>，因此，假設要讀取的暫存器(AO)數量為4個時，Byte Count的值就會是<strong>8 Bytes</strong>。另外，在Response中所讀取到的數值，是由最低位元的暫存器(AO)開始。以下為一範例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Modbus Request =  1c 7f 00 00 00 06 01 03 00 3f 00 04</span><br><span class="line">Modbus Response = 1c 7f 00 00 00 0b 01 03 08 12 34 56 78 a9 87 65 43</span><br></pre></td></tr></table></figure>
+
+<p>在範例中，我們可取得以下結果:</p>
+<ul>
+<li><p>Transaction ID為 <code>0x1c 0x7f</code></p>
+</li>
+<li><p>Slave ID為 <code>0x01</code></p>
+</li>
+<li><p>FC為 <code>0x03</code></p>
+</li>
+<li><p>Start Address為 <code>0x00 0x3f</code>(假設為AO15)</p>
+</li>
+<li><p>Quantity of Registers為 <code>0x04</code>(4個AO)</p>
+</li>
+<li><p>Byte Count為 <code>0x08</code>(8 Bytes)</p>
+</li>
+<li><p>The Value of Registers為 <code>0x12 0x34 0x56 0x78 0xa9 0x87 0x65 0x43</code>，因此，AO15的數值為 <code>0x1234</code>，AO16的數值為 <code>0x5678</code>，AO17的數值為 <code>0xa987</code>，AO18的數值為 <code>0x6543</code></p>
+</li>
+</ul>
+<h3 id="Read-Input-Registers-讀取AI狀態-FC-x3D-0x04"><a href="#Read-Input-Registers-讀取AI狀態-FC-x3D-0x04" class="headerlink" title="Read Input Registers(讀取AI狀態), FC &#x3D; 0x04"></a>Read Input Registers(讀取AI狀態), FC &#x3D; 0x04</h3><p><img src="https://i.imgur.com/MiYjO5y.png" alt="Read Input Registers"></p>
+<ul>
+<li>Request Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要讀取暫存器(AI)的起始位址</td>
+</tr>
+<tr>
+<td align="center">Quantity of Registers</td>
+<td align="left">要讀取的暫存器(AI)數量</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Response Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Byte Count</td>
+<td align="left">The Value of Registers的資料長度</td>
+</tr>
+<tr>
+<td align="center">The Value of Registers</td>
+<td align="left">讀取到的暫存器(AI)的數值</td>
+</tr>
+</tbody></table>
+<p>在Response中，由於暫存器的數值大小是<strong>2 Bytes</strong>，因此，假設要讀取的暫存器(AI)數量為4個時，Byte Count的值就會是<strong>8 Bytes</strong>。另外，在Response中所讀取到的數值，是由最低位元的暫存器(AI)開始。以下為一範例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Modbus Request =  1c 7e 00 00 00 06 01 04 00 1c 00 01</span><br><span class="line">Modbus Response = 1c 7e 00 00 00 05 01 04 02 3d 7e</span><br></pre></td></tr></table></figure>
+
+<p>在範例中，我們可取得以下結果:</p>
+<ul>
+<li><p>Transaction ID為 <code>0x1c 0x7e</code></p>
+</li>
+<li><p>Slave ID為 <code>0x01</code></p>
+</li>
+<li><p>FC為 <code>0x04</code></p>
+</li>
+<li><p>Start Address為 <code>0x00 0x1c</code>(假設為AI12)</p>
+</li>
+<li><p>Quantity of Registers為 <code>0x01</code>(1個AI)</p>
+</li>
+<li><p>Byte Count為 <code>0x02</code>(2 Bytes)</p>
+</li>
+<li><p>The Value of Registers為 <code>0x3d 0x7e</code>，因此，AI12的數值為 <code>0x3d7e</code></p>
+</li>
+</ul>
+<h3 id="Force-Single-Coil-寫入單個DO狀態-FC-x3D-0x05"><a href="#Force-Single-Coil-寫入單個DO狀態-FC-x3D-0x05" class="headerlink" title="Force Single Coil(寫入單個DO狀態), FC &#x3D; 0x05"></a>Force Single Coil(寫入單個DO狀態), FC &#x3D; 0x05</h3><p><img src="https://i.imgur.com/RyY1U1w.png" alt="Force Single Coil"></p>
+<ul>
+<li>Request Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要寫入的線圈(DO)的位址</td>
+</tr>
+<tr>
+<td align="center">Write Data</td>
+<td align="left">要寫入的線圈(DO)的狀態值(ON&#x2F;OFF)</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Response Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要寫入的線圈(DO)的位址</td>
+</tr>
+<tr>
+<td align="center">Write Data</td>
+<td align="left">要寫入的線圈(DO)的狀態值(ON&#x2F;OFF)</td>
+</tr>
+</tbody></table>
+<p>在Request和Response中，Write Data的狀態值通常為 <code>0xFF00</code>(ON)或是 <code>0x0000</code>(OFF)。以下為一範例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Modbus Request =  03 7d 00 00 00 06 01 05 00 ff ff 00</span><br><span class="line">Modbus Response = 03 7d 00 00 00 06 01 05 00 ff ff 00</span><br></pre></td></tr></table></figure>
+
+<p>在範例中，我們可取得以下結果:</p>
+<ul>
+<li><p>Transaction ID為 <code>0x03 0x7d</code></p>
+</li>
+<li><p>Slave ID為 <code>0x01</code></p>
+</li>
+<li><p>FC為 <code>0x05</code></p>
+</li>
+<li><p>Start Address為 <code>0x00 0xff</code>(假設為DO15)</p>
+</li>
+<li><p>Write Data為 <code>0xff00</code>(ON)</p>
+</li>
+</ul>
+<h3 id="Preset-Single-Register-寫入單個AO狀態-FC-x3D-0x06"><a href="#Preset-Single-Register-寫入單個AO狀態-FC-x3D-0x06" class="headerlink" title="Preset Single Register(寫入單個AO狀態), FC &#x3D; 0x06"></a>Preset Single Register(寫入單個AO狀態), FC &#x3D; 0x06</h3><p><img src="https://i.imgur.com/RyY1U1w.png" alt="Preset Single Register"></p>
+<ul>
+<li>Request Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要寫入的暫存器(AO)的位址</td>
+</tr>
+<tr>
+<td align="center">Write Data</td>
+<td align="left">要寫入的暫存器(AO)的數值</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Response Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要寫入的暫存器(AO)的位址</td>
+</tr>
+<tr>
+<td align="center">Write Data</td>
+<td align="left">要寫入的暫存器(AO)的數值</td>
+</tr>
+</tbody></table>
+<p>以下為一範例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Modbus Request =  18 7d 00 00 00 06 01 06 01 43 1a 2b</span><br><span class="line">Modbus Response = 18 7d 00 00 00 06 01 06 01 43 1a 2b</span><br></pre></td></tr></table></figure>
+
+<p>在範例中，我們可取得以下結果:</p>
+<ul>
+<li><p>Transaction ID為 <code>0x18 0x7d</code></p>
+</li>
+<li><p>Slave ID為 <code>0x01</code></p>
+</li>
+<li><p>FC為 <code>0x06</code></p>
+</li>
+<li><p>Start Address為 <code>0x01 0x43</code>(假設為AO3)</p>
+</li>
+<li><p>Write Data為 <code>0x1a2b</code></p>
+</li>
+</ul>
+<h3 id="Force-Multiple-Coils-寫入多個DO狀態-FC-x3D-0x0F"><a href="#Force-Multiple-Coils-寫入多個DO狀態-FC-x3D-0x0F" class="headerlink" title="Force Multiple Coils(寫入多個DO狀態), FC &#x3D; 0x0F"></a>Force Multiple Coils(寫入多個DO狀態), FC &#x3D; 0x0F</h3><p><img src="https://i.imgur.com/y1RSGjO.png" alt="Force Multiple Coils"></p>
+<ul>
+<li>Request Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要寫入線圈(DO)狀態值的起始位址</td>
+</tr>
+<tr>
+<td align="center">Quantity of Coils</td>
+<td align="left">要寫入的線圈(DO)數量</td>
+</tr>
+<tr>
+<td align="center">Byte Count</td>
+<td align="left">Write Data的資料長度</td>
+</tr>
+<tr>
+<td align="center">Write Data</td>
+<td align="left">要寫入的線圈(DO)狀態值</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Response Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要寫入線圈(DO)狀態值的起始位址</td>
+</tr>
+<tr>
+<td align="center">Quantity of Coils</td>
+<td align="left">要寫入的線圈(DO)數量</td>
+</tr>
+</tbody></table>
+<p>在Request中，由於線圈的狀態值大小是<strong>1 bit</strong>(ON&#x2F;OFF)，因此，假設要寫入的線圈(DO)數量為10個時，Byte Count的值就會是<strong>2 Bytes</strong>。另外，假設要寫入的線圈是從線圈10(DO10)開始，則Write Data的數值依照順序為<strong>DO17~DO10 DO19~DO18</strong>。以下為一範例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Modbus Request =  3e 1c 00 00 00 09 01 0f 00 1a 00 0a 02 34 01</span><br><span class="line">Modbus Response = 3e 1c 00 00 00 06 01 0f 00 1a 00 0a</span><br></pre></td></tr></table></figure>
+
+<p>在範例中，我們可取得以下結果:</p>
+<ul>
+<li><p>Transaction ID為 <code>0x3e 0x1c</code></p>
+</li>
+<li><p>Slave ID為 <code>0x01</code></p>
+</li>
+<li><p>FC為 <code>0x0f</code></p>
+</li>
+<li><p>Start Address為 <code>0x00 0x1a</code>(假設為DO10)</p>
+</li>
+<li><p>Quantity of Coils為 <code>0x0a</code>(10個DO)</p>
+</li>
+<li><p>Byte Count為 <code>0x02</code>(2 Bytes)</p>
+</li>
+<li><p>The Value of Coils為 <code>0x34 0x01</code>，因此，DO17~DO10為 <code>00110100</code>，DO22~DO21為 <code>01</code></p>
+</li>
+</ul>
+<h3 id="Force-Multiple-Registers-寫入多個AO狀態-FC-x3D-0x10"><a href="#Force-Multiple-Registers-寫入多個AO狀態-FC-x3D-0x10" class="headerlink" title="Force Multiple Registers(寫入多個AO狀態), FC &#x3D; 0x10"></a>Force Multiple Registers(寫入多個AO狀態), FC &#x3D; 0x10</h3><p><img src="https://i.imgur.com/d2mkGL1.png" alt="Force Multiple Registers"></p>
+<ul>
+<li>Request Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要寫入暫存器(AO)數值的起始位址</td>
+</tr>
+<tr>
+<td align="center">Quantity of Registers</td>
+<td align="left">要寫入的暫存器(AO)數量</td>
+</tr>
+<tr>
+<td align="center">Byte Count</td>
+<td align="left">Write Data的資料長度</td>
+</tr>
+<tr>
+<td align="center">Write Data</td>
+<td align="left">要寫入的暫存器(AO)數值</td>
+</tr>
+</tbody></table>
+<ul>
+<li>Response Field Name</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">欄位</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Transaction ID</td>
+<td align="left">識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Protocol ID</td>
+<td align="left">協定識別碼，如前面所述</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="left">該封包Slave ID加上PDU的資料長度</td>
+</tr>
+<tr>
+<td align="center">Slave ID</td>
+<td align="left">Modbus Slave設備位址</td>
+</tr>
+<tr>
+<td align="center">Function Code</td>
+<td align="left">功能碼，用來定義該封包要執行何種動作</td>
+</tr>
+<tr>
+<td align="center">Start Address</td>
+<td align="left">要寫入暫存器(AO)數值的起始位址</td>
+</tr>
+<tr>
+<td align="center">Quantity of Registers</td>
+<td align="left">要寫入的暫存器(AO)數量</td>
+</tr>
+</tbody></table>
+<p>在Request中，由於暫存器的數值大小是<strong>2 Bytes</strong>，因此，假設要寫入的暫存器(AO)數量為2個時，Byte Count的值就會是<strong>4 Bytes</strong>。以下為一範例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Modbus Request =  1e 1c 00 00 00 0b 01 10 00 3c 00 02 04 12 34 56 78</span><br><span class="line">Modbus Response = 1e 1c 00 00 00 06 01 10 00 3c 00 02</span><br></pre></td></tr></table></figure>
+
+<p>在範例中，我們可取得以下結果:</p>
+<ul>
+<li><p>Transaction ID為 <code>0x1e 0x1c</code></p>
+</li>
+<li><p>Slave ID為 <code>0x01</code></p>
+</li>
+<li><p>FC為 <code>0x10</code></p>
+</li>
+<li><p>Start Address為 <code>0x00 0x3c</code>(假設為AO12)</p>
+</li>
+<li><p>Quantity of Registers為 <code>0x02</code>(2個AO)</p>
+</li>
+<li><p>Byte Count為 <code>0x04</code>(4 Bytes)</p>
+</li>
+<li><p>The Value of Registers為 <code>0x12 0x34 0x56 0x78</code>，因此，AO12為 <code>0x1234</code>，AO13為 <code>0x5678</code></p>
+</li>
+</ul>
+<h2 id="Modbus-TCP封包長度"><a href="#Modbus-TCP封包長度" class="headerlink" title="Modbus TCP封包長度"></a>Modbus TCP封包長度</h2><p>在上一節我們介紹了各個FC所組成的Modbus TCP封包，然而，當我們在傳輸封包時，封包的長度是具有限制的，根據定義，一個完整的Modbus TCP封包其最大的資料長度為<strong>260 bytes</strong>。</p>
+<table>
+<thead>
+<tr>
+<th align="center">Transaction ID</th>
+<th align="center">Protocol ID</th>
+<th align="center">Length</th>
+<th align="center">Slave ID</th>
+<th align="center">Modbus TCP PDU</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">2 bytes</td>
+<td align="center">2 bytes</td>
+<td align="center">2 bytes</td>
+<td align="center">1 bytes</td>
+<td align="center">Max. 253 bytes</td>
+</tr>
+</tbody></table>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://ipc2u.com/articles/knowledge-base/detailed-description-of-the-modbus-tcp-protocol-with-command-examples/">Detailed description of the Modbus TCP protocol with command examples</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://ferrishuang1998.github.io/2023/06/25/Modbus-TCP-Format/" data-id="cljdowdqc00072wvhetznd95i" data-title="Modbus通信協定介紹 - Modbus TCP封包" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Modbus-Protocol/" rel="tag">Modbus Protocol</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Modbus-TCP/" rel="tag">Modbus TCP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Modbus%E9%80%9A%E4%BF%A1%E5%8D%94%E5%AE%9A/" rel="tag">Modbus通信協定</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/06/26/Modbus-RTU-Format/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Modbus通信協定介紹 - Modbus RTU封包
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/06/25/Modbus-Protocol/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Modbus通信協定介紹</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分類</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E5%AE%83/">其它</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%80%9A%E8%A8%8A%E5%8D%94%E5%AE%9A/">通訊協定</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%80%9A%E8%A8%8A%E5%8D%94%E5%AE%9A/Modbus/">Modbus</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">彙整</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/06/26/Modbus-RTU-Format/">Modbus通信協定介紹 - Modbus RTU封包</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/25/Modbus-TCP-Format/">Modbus通信協定介紹 - Modbus TCP封包</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/25/Modbus-Protocol/">Modbus通信協定介紹</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/21/%E5%A6%82%E4%BD%95%E5%9C%A8Netbeans-IDE%E4%B8%AD%E5%B0%8E%E5%85%A5Maven-Plugin/">如何在Netbeans IDE中導入Maven Plugin</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/21/%E6%8C%87%E6%A8%99-(Pointer)/">指標 (Pointer)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+
+      <span id="busuanzi_container_site_uv">
+        瀏覽人數&nbsp;<span id="busuanzi_value_site_uv"></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+      </span>
+      <span id="busuanzi_container_site_pv">
+        瀏覽次數&nbsp;<span id="busuanzi_value_site_pv"></span>
+      </span>
+      <br>
+      <br>
+
+      &copy; 2023 Ferris Huang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

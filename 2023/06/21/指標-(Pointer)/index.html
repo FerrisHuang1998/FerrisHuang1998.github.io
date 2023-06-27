@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>指標 (Pointer) | Ferris&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="指標 (Pointer) 指的就是變數的記憶體位址，在宣告時可將*放在變數型別之後代表宣告了一指標變數。我們可透過指標變數來存取其他變數的記憶體位址，或是透過指標變數存取記憶體內存放的數值。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="指標 (Pointer)">
+<meta property="og:url" content="https://ferrishuang1998.github.io/2023/06/21/%E6%8C%87%E6%A8%99-(Pointer)/index.html">
+<meta property="og:site_name" content="Ferris&#39;s Blog">
+<meta property="og:description" content="指標 (Pointer) 指的就是變數的記憶體位址，在宣告時可將*放在變數型別之後代表宣告了一指標變數。我們可透過指標變數來存取其他變數的記憶體位址，或是透過指標變數存取記憶體內存放的數值。">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://1.bp.blogspot.com/-1I4M6RPA53Y/Wro4XObTiEI/AAAAAAAAAwg/MwCqZxNlkbM5rmIBAC5IxKFERiOvume8gCLcBGAs/s1600/poa.png">
+<meta property="og:image" content="https://1.bp.blogspot.com/-vqCODS9syO0/WrphaI4rgoI/AAAAAAAAAww/7EK_hSUb5VM-c4KJXu_nolzjWSA4gq0DACLcBGAs/s1600/ptoa.png">
+<meta property="article:published_time" content="2023-06-21T03:00:00.000Z">
+<meta property="article:modified_time" content="2023-06-27T03:34:00.987Z">
+<meta property="article:author" content="Ferris Huang">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta property="article:tag" content="指標">
+<meta property="article:tag" content="Pointer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://1.bp.blogspot.com/-1I4M6RPA53Y/Wro4XObTiEI/AAAAAAAAAwg/MwCqZxNlkbM5rmIBAC5IxKFERiOvume8gCLcBGAs/s1600/poa.png">
+  
+  
+    <link rel="shortcut icon" href="/imgs/favicon.ico">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Ferris&#39;s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">程式筆記 &amp; 嵌入式開發</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/FerrisHuang1998/"><span class="fa fa-github"></span></a>
+          
+        
+        
+        <a class="nav-icon nav-search-btn" title="搜尋"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜尋"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://FerrisHuang1998.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-指標-(Pointer)" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/06/21/%E6%8C%87%E6%A8%99-(Pointer)/" class="article-date">
+  <time class="dt-published" datetime="2023-06-21T03:00:00.000Z" itemprop="datePublished">2023-06-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C-C/">C/C++</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      指標 (Pointer)
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>指標 (Pointer) 指的就是變數的記憶體位址，在宣告時可將<code>*</code>放在變數型別之後代表宣告了一指標變數。我們可透過指標變數來存取其他變數的記憶體位址，或是透過指標變數存取記憶體內存放的數值。</p>
+<span id="more"></span>
+
+<h2 id="指標的宣告與使用"><a href="#指標的宣告與使用" class="headerlink" title="指標的宣告與使用"></a>指標的宣告與使用</h2><h3 id="指標宣告"><a href="#指標宣告" class="headerlink" title="指標宣告"></a>指標宣告</h3><p>當我們在宣告一指標變數時，可透過以下方式進行宣告:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[修飾詞] [資料型別] *[變數名稱];</span><br></pre></td></tr></table></figure>
+
+<p>舉例來說，當我們宣告一個整數型態的指標變數<code>a</code>時，可以這樣進行宣告:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int *a;</span><br></pre></td></tr></table></figure>
+
+<p>如此一來，指標變數a便宣告完成，但是由於a是新宣告的指標變數，因此變數並沒有指向一記憶體位址，因此<code>a</code>的數值可能為不定值。所以，當我們宣告一指標變數時，我們可以改寫成:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int *a = NULL;</span><br></pre></td></tr></table></figure>
+
+<p>此宣告方式代表我們宣告一指標變數<code>a</code>，並且其指向的記憶體位址為<code>NULL</code>(或是<code>0</code>)。透過這樣的宣告方式，如果我們在沒有對<code>a</code>進行操作就需要取得<code>a</code>的記憶體位址時，就不會取得任何不定值。</p>
+<h3 id="指標的使用方式"><a href="#指標的使用方式" class="headerlink" title="指標的使用方式"></a>指標的使用方式</h3><p>當我們宣告一指標變數時，我們可對其存放其他變數的記憶體位址，或是分配新的記憶體空間，並存放到該指標變數中，進行後續的使用。舉例來說:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int a = 10;</span><br><span class="line">int *b = &amp;a;    // &amp;a = a的記憶體位址</span><br><span class="line"></span><br><span class="line">int main(void)&#123;</span><br><span class="line">    printf(&quot;a %s b\r\n&quot;, a == *b ? &quot;==&quot; : &quot;!=&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在該範例中，我們宣告了一變數<code>a</code>，並將<code>10</code>存放至<code>a</code>所分配到的記憶體空間。接著，我們宣告了一指標變數<code>b</code>，並將其記憶體位址指向<code>a</code>的記憶體位址。如此一來，我們便能夠透過指標變數<code>b</code>來取得變數<code>a</code>的數值，或是修改變數<code>a</code>的數值。最後，在<code>main()</code>中，我們打印了<code>a</code>的數值與<code>b</code>指定的記憶體位址內所取得的數值的比較結果。因此，該結果將打印出<code>a == b</code>。</p>
+<p>除了存放變數的記憶體位址外，我們可將宣告的指標變數用來存放新分配的記憶體空間，舉例來說:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int *a = NULL;</span><br><span class="line"></span><br><span class="line">int main(void)&#123;</span><br><span class="line">    a = (int*) malloc(3 * sizeof(int));</span><br><span class="line">    if(a != NULL) free(a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在該範例中，我們宣告了指標變數<code>a</code>，並將其位址指向<code>NULL</code>。接著，在<code>main()</code>中，我們透過<code>malloc()</code>函式分配了3塊整數型別的記憶體空間，並將其分配的記憶體空間指向指標變數<code>a</code>。如此一來，我們便可透過<code>a</code>來對新分配的記憶體空間進行存取。最後，當記憶體空間使用完成後，我們透過<code>free()</code>函式將記憶體空間進行釋放。</p>
+<h2 id="指標與陣列"><a href="#指標與陣列" class="headerlink" title="指標與陣列"></a>指標與陣列</h2><p>當我們宣告指標變數時，指標變數內存放的是記憶體位址，然而，當我們宣告陣列變數時，則是分配固定的記憶體變數後，透過陣列變數的位址來存取記憶體。舉例來說:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int a = 10;</span><br><span class="line">int *b = &amp;a;</span><br><span class="line">int c[4] = &#123;0, 0, 0, 0&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在該範例中，我們宣告了變數<code>a</code>及指標變數<code>b</code>，並將<code>b</code>指向<code>a</code>的記憶體位址，因此<code>b</code>取值時將取得變數<code>a</code>的數值。接著，我們宣告了一陣列變數<code>c</code>，並指定其需要4個<code>int</code>型態的記憶體空間，並在每個空間中指定數值為<code>0</code>，因此，我們可透過<code>c[num]</code>來取得記憶體空間內的數值，另外，我們還可透過<code>c + [num]</code>來取得<code>c</code>所分配的各個記憶體位址。所以，指標和陣列有一定的相似之處，但也有所不同。</p>
+<p>在多數時候，我們會在需要使用動態分配記憶體空間的情況下使用指標變數進行存取，其他情況則使用陣列。舉例來說，當我們需要記錄某一20人班級的成績時，由於班級的人數已知，因此我們使用陣列變數來存放20人的成績，例如:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int score[20] = &#123;0&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>然而，如果我們需要紀錄班級中成績在80分以上的學生時，由於我們需要透過檢查每位學生的成績才能知道到底有多少人80分以上，因此我們若要準確地分配記憶體空間的話，必須要在檢查完所有成績後，再動態分配記憶體。假設該班有<code>n</code>人成績為80分以上，我們可將變數寫成以下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int *score_greater = (int*) malloc(n * sizeof(int));</span><br></pre></td></tr></table></figure>
+
+<p>如此一來，我們便可精確地分配每塊記憶體空間。</p>
+<h3 id="指標陣列和陣列指標"><a href="#指標陣列和陣列指標" class="headerlink" title="指標陣列和陣列指標"></a>指標陣列和陣列指標</h3><p>在上一節中，我們初步了解了陣列與指標的區別，然而，陣列與指標之間其實還可以互相組合，變成<strong>指標陣列</strong>和<strong>陣列指標</strong>，不過，指標陣列和陣列指標卻是截然不同的資料型別，以下為兩者的定義:</p>
+<ul>
+<li><p>指標陣列 (Array of Pointers):		存放多個指標的陣列，陣列中的每個元素皆為指標。 <img src="https://1.bp.blogspot.com/-1I4M6RPA53Y/Wro4XObTiEI/AAAAAAAAAwg/MwCqZxNlkbM5rmIBAC5IxKFERiOvume8gCLcBGAs/s1600/poa.png" alt="指標陣列"></p>
+</li>
+<li><p>陣列指標 (A Pointer to an Array): 指向一陣列的指標。 <img src="https://1.bp.blogspot.com/-vqCODS9syO0/WrphaI4rgoI/AAAAAAAAAww/7EK_hSUb5VM-c4KJXu_nolzjWSA4gq0DACLcBGAs/s1600/ptoa.png" alt="陣列指標"></p>
+</li>
+</ul>
+<h3 id="多重指標"><a href="#多重指標" class="headerlink" title="多重指標"></a>多重指標</h3><p>在前面我們介紹到，如果在宣告變數型別後加入<code>*</code>，代表其宣告的是 <strong>指標變數</strong>(或<strong>一階指標</strong>)。然而，我們還可透過宣告一指標變數來指向某個指標變數，我們可稱其為<strong>雙重指標</strong>或<strong>二階指標</strong>，雙重指標便是用來存放一階指標的記憶體位址。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int a = 8;</span><br><span class="line">int *b = &amp;a;</span><br><span class="line">int **c = &amp;b;</span><br></pre></td></tr></table></figure>
+
+<p>在上述範例中，我們宣告了變數<code>a</code>，並於記憶體空間中存入數值<code>8</code>。接著，我們宣告了一階指標<code>b</code>，其記憶體位址指向了<code>a</code>的記憶體位址，因此，<code>b</code>可存取<code>a</code>的記憶體位址及數值。最後，我們宣告了二階指標<code>c</code>，其記憶體位址指向了<code>b</code>的記憶體位址，因此，我們可透過<code>c</code>取得<code>b</code>的記憶體位址，並且可透過取值運算子(<code>*</code>)間接取得<code>a</code>的記憶體位址。以下範例說明了<code>a</code>、<code>b</code>和<code>c</code>之間的關係:</p>
+<ul>
+<li><p><code>a = *b = **c</code></p>
+</li>
+<li><p><code>&amp;a = b = *c</code></p>
+</li>
+<li><p><code>&amp;(&amp;a) = &amp;b = c</code></p>
+</li>
+</ul>
+<p>同樣地，在前面我們介紹到一階陣列與一階指標間的關係，而雙重指標與陣列之間的關係就如同一階陣列與一階指標的關係，以下範例將說明二階陣列與指標間的關係:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int arr[3][3] = &#123;&#123;10, 20, 30&#125;, &#123;30, 60, 90&#125;, &#123;90, 180, 270&#125;&#125;;</span><br><span class="line">int *ptr = arr[0];</span><br><span class="line">int *aop[3] = &#123;arr[0], arr[1], arr[2]&#125;;</span><br><span class="line">int **dptr = &amp;ptr;</span><br></pre></td></tr></table></figure>
+
+<p>在此範例中，我們可得到以下結果:</p>
+<ul>
+<li><p><code>arr[0][0] = *ptr = **dptr</code></p>
+</li>
+<li><p><code>arr[0] = ptr = aop[0] = *dptr</code></p>
+</li>
+<li><p><code>arr[n] = aop[n], n = 0, 1, 2</code></p>
+</li>
+<li><p><code>&amp;ptr = dptr</code></p>
+</li>
+</ul>
+<p>除了上述的二階指標外，我們還可以宣告如三階指標、四階指標…等多階指標，而其定義就如同於二階指標，因此三重指標便是指向一二階指標的指標變數，依此類推…。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://hackgrass.blogspot.com/2018/03/c-pointerint-foo-int-bar.html">(C) 簡單搞懂指標、指標陣列與指向陣列的指標</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://ferrishuang1998.github.io/2023/06/21/%E6%8C%87%E6%A8%99-(Pointer)/" data-id="cljdowdqi000b2wvhd1jdb9df" data-title="指標 (Pointer)" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-C/" rel="tag">C&#x2F;C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Pointer/" rel="tag">Pointer</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8C%87%E6%A8%99/" rel="tag">指標</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/06/21/%E5%A6%82%E4%BD%95%E5%9C%A8Netbeans-IDE%E4%B8%AD%E5%B0%8E%E5%85%A5Maven-Plugin/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          如何在Netbeans IDE中導入Maven Plugin
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/06/20/Makefile/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Makefile</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分類</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E5%AE%83/">其它</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%80%9A%E8%A8%8A%E5%8D%94%E5%AE%9A/">通訊協定</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%80%9A%E8%A8%8A%E5%8D%94%E5%AE%9A/Modbus/">Modbus</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">彙整</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/06/26/Modbus-RTU-Format/">Modbus通信協定介紹 - Modbus RTU封包</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/25/Modbus-TCP-Format/">Modbus通信協定介紹 - Modbus TCP封包</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/25/Modbus-Protocol/">Modbus通信協定介紹</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/21/%E5%A6%82%E4%BD%95%E5%9C%A8Netbeans-IDE%E4%B8%AD%E5%B0%8E%E5%85%A5Maven-Plugin/">如何在Netbeans IDE中導入Maven Plugin</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/21/%E6%8C%87%E6%A8%99-(Pointer)/">指標 (Pointer)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+
+      <span id="busuanzi_container_site_uv">
+        瀏覽人數&nbsp;<span id="busuanzi_value_site_uv"></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+      </span>
+      <span id="busuanzi_container_site_pv">
+        瀏覽次數&nbsp;<span id="busuanzi_value_site_pv"></span>
+      </span>
+      <br>
+      <br>
+
+      &copy; 2023 Ferris Huang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

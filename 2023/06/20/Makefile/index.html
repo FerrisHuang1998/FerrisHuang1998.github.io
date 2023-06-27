@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Makefile | Ferris&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="GNU Make是一種用於程式自動維護的工具程式，透過讀取使用者編寫的Makefile檔案，能夠將程式區分成多個模組，並根據模組的修改情形，自動判斷哪些模組需要重新編譯，省去大量重複編譯的時間。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Makefile">
+<meta property="og:url" content="https://ferrishuang1998.github.io/2023/06/20/Makefile/index.html">
+<meta property="og:site_name" content="Ferris&#39;s Blog">
+<meta property="og:description" content="GNU Make是一種用於程式自動維護的工具程式，透過讀取使用者編寫的Makefile檔案，能夠將程式區分成多個模組，並根據模組的修改情形，自動判斷哪些模組需要重新編譯，省去大量重複編譯的時間。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2023-06-20T13:00:00.000Z">
+<meta property="article:modified_time" content="2023-06-27T03:33:50.604Z">
+<meta property="article:author" content="Ferris Huang">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta property="article:tag" content="Makefile">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="shortcut icon" href="/imgs/favicon.ico">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Ferris&#39;s Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">程式筆記 &amp; 嵌入式開發</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          
+            <a class="nav-icon" target="_blank" rel="noopener" href="https://github.com/FerrisHuang1998/"><span class="fa fa-github"></span></a>
+          
+        
+        
+        <a class="nav-icon nav-search-btn" title="搜尋"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜尋"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://FerrisHuang1998.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Makefile" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/06/20/Makefile/" class="article-date">
+  <time class="dt-published" datetime="2023-06-20T13:00:00.000Z" itemprop="datePublished">2023-06-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C-C/">C/C++</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Makefile
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>GNU Make是一種用於程式自動維護的工具程式，透過讀取使用者編寫的Makefile檔案，能夠將程式區分成多個模組，並根據模組的修改情形，自動判斷哪些模組需要重新編譯，省去大量重複編譯的時間。</p>
+<span id="more"></span>
+
+<h2 id="Table-of-Contents"><a href="#Table-of-Contents" class="headerlink" title="Table of Contents"></a>Table of Contents</h2><ul>
+<li><p><a href="#%E8%AA%9E%E6%B3%95">語法</a></p>
+</li>
+<li><p><a href="#%E5%81%BD%E7%9B%AE%E6%A8%99phony">偽目標</a></p>
+</li>
+<li><p><a href="#%E8%AE%8A%E6%95%B8">變數</a></p>
+</li>
+<li><p><a href="#%E8%87%AA%E5%8B%95%E5%8C%96%E8%AE%8A%E6%95%B8">自動化變數</a></p>
+</li>
+<li><p><a href="#%E8%90%AC%E7%94%A8%E5%AD%97%E5%85%83">萬用字元</a></p>
+</li>
+<li><p><a href="#%E7%89%B9%E5%88%A5%E5%AD%97%E5%85%83">特別字元</a></p>
+</li>
+<li><p><a href="#%E8%A8%BB%E8%A7%A3">註解</a></p>
+</li>
+<li><p><a href="#%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B8">常用函數</a></p>
+<ul>
+<li><p><a href="#notdir-names">$(notdir names)</a></p>
+</li>
+<li><p><a href="#addprefix-prefixnames">$(addprefix prefix,names…)</a></p>
+</li>
+<li><p><a href="#addsuffix-suffixnames">$(addsuffix suffix,names…)</a></p>
+</li>
+<li><p><a href="#wildcard-pattern">$(wildcard pattern)</a></p>
+</li>
+<li><p><a href="#patsubst-patternreplacementtext">$(patsubst pattern,replacement,text)</a></p>
+</li>
+<li><p><a href="#call-variableparamparam">The call Function</a></p>
+</li>
+</ul>
+</li>
+<li><p><a href="#%E9%99%A4%E9%8C%AFdebug">除錯</a></p>
+</li>
+<li><p><a href="#reference">Reference</a></p>
+</li>
+</ul>
+<h2 id="語法"><a href="#語法" class="headerlink" title="語法"></a>語法</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">target: dependency1 dependency2 ...</span><br><span class="line">	script</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>target: 要建立的目標檔案</p>
+</li>
+<li><p>dependency1, dependency2, …: 目標檔案建立所需的依賴項目(檔案)</p>
+</li>
+<li><p>script: 建立目標檔案時所需執行的Shell命令。每行命令的開始須以Tab鍵縮排(如同python縮排)</p>
+</li>
+</ul>
+<p>以下為一範例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">all: main						# 建立最終目標前需要main執行檔</span><br><span class="line">	@echo build: main			# 在Terminal打印build: main</span><br><span class="line"></span><br><span class="line">main: main.o					# 建立main執行檔前需要main.o</span><br><span class="line">	gcc -o main main.o			# gcc command</span><br><span class="line"></span><br><span class="line">main.o: main.c					# 建立main.o前需要main.c</span><br><span class="line">	gcc -o main.o -c main.c		# gcc command</span><br></pre></td></tr></table></figure>
+
+<p>該範例執行流程如下:</p>
+<ol>
+<li><p>執行make時，程式以第一個target為最終目標，因此<code>all</code>為make的最終目標</p>
+</li>
+<li><p><code>all</code>的相依性項目為main，若目錄下沒有main執行檔時，則建立<code>main</code></p>
+</li>
+<li><p>建立<code>main</code>所需的相依性項目為main.o，若目錄下沒有main.o，則建立<code>main.o</code>；若main.o的版本比main執行檔的版本還新，則執行命令。</p>
+</li>
+<li><p>建立<code>main.o</code>所需的相依性項目為main.c，若目錄下沒有main.c，並且檔案中無建立<code>main.c</code>的命令，則回傳建立失敗，程式結束；若目錄下main.c的版本比main.o的版本還新，則執行命令。</p>
+</li>
+<li><p>建立<code>main.o</code>後，執行<code>main</code>的命令</p>
+</li>
+<li><p>建立<code>main</code>後，執行<code>all</code>的命令</p>
+</li>
+</ol>
+<h2 id="偽目標-PHONY"><a href="#偽目標-PHONY" class="headerlink" title="偽目標(.PHONY)"></a>偽目標(.PHONY)</h2><p>偽目標(.PHONY)是一種在執行Makefile時，不會產生對應名稱檔案的一種規則。 偽目標通常使用於以下兩種情形:</p>
+<ol>
+<li><p>防止與相同名稱的檔案發生衝突: 由於Makefile在執行規則時，若目錄下具有相同名稱的檔案，而該規則又不具有任何相依性項目，則該規則將永遠不會執行，直到相同名稱不存在於目錄下。</p>
+</li>
+<li><p>提高執行效率: 由於Makefile在執行規則時，都會檢查目錄下是否具有相同名稱的檔案。若將其指定為偽目標，則該規則在執行時將不會進行檢查，藉此提高執行效率。</p>
+</li>
+</ol>
+<p>由於偽目標使對應的規則在執行時不會產生目標檔案，因此每次輸入該規則時都將被執行。</p>
+<p>Ex:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">clean:</span><br><span class="line">	rm -r -f $(DIR_OBJ)/*.o $(EXEC)		# 清除 執行檔和*.o檔</span><br><span class="line"></span><br><span class="line">.PHONY: clean							# make clean每次都會被執行</span><br></pre></td></tr></table></figure>
+
+<h2 id="變數"><a href="#變數" class="headerlink" title="變數"></a>變數</h2><p>宣告變數時可使用以下方式宣告:</p>
+<ul>
+<li><p><code>var = val</code>	: 宣告var變數並賦值為val</p>
+</li>
+<li><p><code>var := val</code>	: 若var變數已宣告，則覆蓋var的值為val；若var變數尚未宣告，則宣告該變數並賦值為val</p>
+</li>
+<li><p><code>var ?= val</code>	: 若var變數已宣告，則維持原本的值；若var變數尚未宣告，則宣告該變數並賦值為val</p>
+</li>
+<li><p><code>var += val</code>	: 將val的值附加至var變數原本的值</p>
+</li>
+</ul>
+<h2 id="自動化變數"><a href="#自動化變數" class="headerlink" title="自動化變數"></a>自動化變數</h2><p>在執行命令時，可使用自動化變數取得變數的值</p>
+<ul>
+<li><p><code>$@</code> : 當前的目標項目名稱</p>
+</li>
+<li><p><code>$^</code> : 所有相依性項目名稱</p>
+</li>
+<li><p><code>$&lt;</code> : 第一個相依性項目的名稱</p>
+</li>
+<li><p><code>$*</code> : N&#x2F;A</p>
+</li>
+<li><p><code>$?</code> : 需要重建的相依性項目名稱</p>
+</li>
+<li><p><code>$(@F)</code> : 當前的目標項目名稱(不包含路徑)</p>
+</li>
+<li><p><code>$(^F)</code> : 所有相依性項目名稱(不包含路徑)</p>
+</li>
+</ul>
+<h2 id="萬用字元"><a href="#萬用字元" class="headerlink" title="萬用字元"></a>萬用字元</h2><p>Makefile中的萬用字元為<code>%</code>，在<code>%</code>前後可串接任意字串表示字串的特定格式，形同於正則表達式(Regex Expression)</p>
+<p>Ex:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SRCS =	/test/a.c	\</span><br><span class="line">		/test/b.c	\</span><br><span class="line">		/test/c.c	\</span><br><span class="line"></span><br><span class="line">all:</span><br><span class="line">	@echo OBJS = $(patsubst /test/%.c, /obj/%.o, $(SRCS))	# %為檔案名稱(不包含副檔名)</span><br></pre></td></tr></table></figure>
+
+<h2 id="特別字元"><a href="#特別字元" class="headerlink" title="特別字元"></a>特別字元</h2><ul>
+<li><p><code>@</code> : 不於Terminal打印出該命令。 由於Makefile在執行命令時會將命令打印在Terminal，若在命令前加入<code>@</code>，程式將不打印出該命令。</p>
+</li>
+<li><p><code>-</code> : 當該命令出錯時，程式不會被中斷。 由於Makefile在執行命令時，若有命令出錯，將直接中斷程式執行並返回錯誤。若在命令前加入<code>-</code>，程式將直接忽略該錯誤，繼續往下執行。</p>
+</li>
+</ul>
+<h2 id="註解"><a href="#註解" class="headerlink" title="註解"></a>註解</h2><p>如同Shell Script，在Makefile檔案中以#為行首的字串都是註解</p>
+<p>Ex:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Makefile Main Script</span><br><span class="line">all:</span><br><span class="line">	@echo Hello world!	# 打印Hello world!</span><br></pre></td></tr></table></figure>
+
+<h2 id="常用函數"><a href="#常用函數" class="headerlink" title="常用函數"></a>常用函數</h2><h3 id="notdir-names"><a href="#notdir-names" class="headerlink" title="$(notdir names)"></a><code>$(notdir names)</code></h3><p>去除所有檔案的路徑。</p>
+<h4 id="Parameters"><a href="#Parameters" class="headerlink" title="Parameters"></a>Parameters</h4><p>names:	File names.</p>
+<h4 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h4><p>此範例所產生的結果為 <code>main.c, sd.c, common.c</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FILES = $(notdir src/main.c dev/sd.c common.c)</span><br></pre></td></tr></table></figure>
+
+<h3 id="addprefix-prefix-names"><a href="#addprefix-prefix-names" class="headerlink" title="$(addprefix prefix,names...)"></a><code>$(addprefix prefix,names...)</code></h3><p>新增字串至輸入字串的開頭。</p>
+<h4 id="Parameters-1"><a href="#Parameters-1" class="headerlink" title="Parameters"></a>Parameters</h4><p>prefix:	String which will prepended to names.</p>
+<p>names:	Strings.</p>
+<h4 id="Example-1"><a href="#Example-1" class="headerlink" title="Example"></a>Example</h4><p>此範例將打印出 <code>src/main.c, src/sum.c, src/sub.c</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FILES = main.c	sum.c	sub.c</span><br><span class="line">SRCS = $(addprefix src/,$(FILES))</span><br><span class="line"></span><br><span class="line">all:</span><br><span class="line">	@echo $(SRCS)</span><br></pre></td></tr></table></figure>
+
+<h3 id="addsuffix-suffix-names"><a href="#addsuffix-suffix-names" class="headerlink" title="$(addsuffix suffix,names...)"></a><code>$(addsuffix suffix,names...)</code></h3><p>新增字串至輸入字串的結尾。</p>
+<h4 id="Parameters-2"><a href="#Parameters-2" class="headerlink" title="Parameters"></a>Parameters</h4><p>suffix:	String which will appended to names.</p>
+<p>names:	Strings</p>
+<h4 id="Example-2"><a href="#Example-2" class="headerlink" title="Example"></a>Example</h4><p>此範例將打印出 <code>src/main.c, inc/sum.c, inc/sub.c</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">FILES = src/main inc/sum inc/sub</span><br><span class="line">SRCS = $(addsuffix .c,$(FILES))</span><br><span class="line"></span><br><span class="line">all:</span><br><span class="line">	@echo $(SRCS)</span><br></pre></td></tr></table></figure>
+
+<h3 id="wildcard-pattern"><a href="#wildcard-pattern" class="headerlink" title="$(wildcard pattern)"></a><code>$(wildcard pattern)</code></h3><p>取得目錄下符合輸入規則的檔案。</p>
+<h4 id="Parameters-3"><a href="#Parameters-3" class="headerlink" title="Parameters"></a>Parameters</h4><p>pattern:	File name pattern.</p>
+<h4 id="Example-3"><a href="#Example-3" class="headerlink" title="Example"></a>Example</h4><p>此範例將取得<code>src</code>目錄下所有.c檔案。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SRCS = $(wildcard src/*.c)	# 取得src目錄下所有.c檔案</span><br></pre></td></tr></table></figure>
+
+<h3 id="patsubst-pattern-replacement-text"><a href="#patsubst-pattern-replacement-text" class="headerlink" title="$(patsubst pattern,replacement,text)"></a><code>$(patsubst pattern,replacement,text)</code></h3><p>尋找符合語法規則的字串，並將其進行抽換。</p>
+<h4 id="Parameters-4"><a href="#Parameters-4" class="headerlink" title="Parameters"></a>Parameters</h4><p>pattern:		String pattern.</p>
+<p>replacement:	Replace string pattern.</p>
+<p>text:			Input text string.</p>
+<h4 id="Example-4"><a href="#Example-4" class="headerlink" title="Example"></a>Example</h4><p>此範例將打印出 <code>obj/main.o, obj/sum.o, obj/sub.o</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SRCS = src/main.c	src/sum.c	src/sub.c</span><br><span class="line">OBJS = $(patsubst src/%.c,obj/%.o,$(SRCS))</span><br><span class="line"></span><br><span class="line">all:</span><br><span class="line">	@echo $(OBJS)</span><br></pre></td></tr></table></figure>
+
+<h3 id="filter-pattern-text"><a href="#filter-pattern-text" class="headerlink" title="$(filter pattern...,text)"></a><code>$(filter pattern...,text)</code></h3><p>取得符合任一語法規則的字串。</p>
+<h4 id="Parameters-5"><a href="#Parameters-5" class="headerlink" title="Parameters"></a>Parameters</h4><p>pattern:	String patterns.</p>
+<p>text:		String.</p>
+<h4 id="Example-5"><a href="#Example-5" class="headerlink" title="Example"></a>Example</h4><p>此範例將取得 <code>src/main.c src/sum.c src/sub.c inc/sum.h inc/sub.h</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">FILES = src/main.c	\</span><br><span class="line">		src/sum.c	\</span><br><span class="line">		src/sub.c	\</span><br><span class="line">		obj/main.o	\</span><br><span class="line">		obj/sum.o	\</span><br><span class="line">		obj/sub.o	\</span><br><span class="line">		inc/sum.h	\</span><br><span class="line">		inc/sub.h	\</span><br><span class="line">		main</span><br><span class="line">		</span><br><span class="line">FILE_INCS_SRCS = $(filter %.c %.h,$(FILES))</span><br><span class="line"></span><br><span class="line">all:</span><br><span class="line">	@echo $(FILE_INCS_SRCS)</span><br></pre></td></tr></table></figure>
+
+<h3 id="call-variable-param-param"><a href="#call-variable-param-param" class="headerlink" title="$(call variable,param,param,...)"></a><code>$(call variable,param,param,...)</code></h3><p>將變數的數值進行抽換。</p>
+<h4 id="Paramters"><a href="#Paramters" class="headerlink" title="Paramters"></a>Paramters</h4><p>variable: Defined variable which used in funcitons.</p>
+<p>param: Paramter which defined in <code>variable</code>.</p>
+<h4 id="Example-6"><a href="#Example-6" class="headerlink" title="Example"></a>Example</h4><p>此範例將打印出 <code>src/main.c, src/sum.c, src/sub.c</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CALL_FILES = $(addprefix src/,$(2) $(3) $(1))</span><br><span class="line">SRCS = $(call CALL_SRCS,sub.c,main.c,sum.c)</span><br><span class="line"></span><br><span class="line">all:</span><br><span class="line">	@echo $(SRCS)</span><br></pre></td></tr></table></figure>
+
+<h2 id="除錯-Debug"><a href="#除錯-Debug" class="headerlink" title="除錯(Debug)"></a>除錯(Debug)</h2><p>在執行Makefile時，可增加 <code>--debug</code> 參數打印Makefile程式執行過程</p>
+<p>Ex:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\user\test_mkfile&gt; make --debug</span><br></pre></td></tr></table></figure>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.gnu.org/software/make/manual/make.html">GNU make</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://hackmd.io/@sysprog/SySTMXPvl">Makefile 語法和示範</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://dywang.csie.cyut.edu.tw/dywang/linuxProgram/node1.html">Linux程式設計-make與 makefile</a></p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://ferrishuang1998.github.io/2023/06/20/Makefile/" data-id="cljdowdq400022wvh64ca4kd6" data-title="Makefile" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-C/" rel="tag">C&#x2F;C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Makefile/" rel="tag">Makefile</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/06/21/%E6%8C%87%E6%A8%99-(Pointer)/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          指標 (Pointer)
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分類</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E5%AE%83/">其它</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%80%9A%E8%A8%8A%E5%8D%94%E5%AE%9A/">通訊協定</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%80%9A%E8%A8%8A%E5%8D%94%E5%AE%9A/Modbus/">Modbus</a></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">彙整</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/06/">六月 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/06/26/Modbus-RTU-Format/">Modbus通信協定介紹 - Modbus RTU封包</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/25/Modbus-TCP-Format/">Modbus通信協定介紹 - Modbus TCP封包</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/25/Modbus-Protocol/">Modbus通信協定介紹</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/21/%E5%A6%82%E4%BD%95%E5%9C%A8Netbeans-IDE%E4%B8%AD%E5%B0%8E%E5%85%A5Maven-Plugin/">如何在Netbeans IDE中導入Maven Plugin</a>
+          </li>
+        
+          <li>
+            <a href="/2023/06/21/%E6%8C%87%E6%A8%99-(Pointer)/">指標 (Pointer)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+
+      <span id="busuanzi_container_site_uv">
+        瀏覽人數&nbsp;<span id="busuanzi_value_site_uv"></span>&nbsp;&nbsp;|&nbsp;&nbsp;
+      </span>
+      <span id="busuanzi_container_site_pv">
+        瀏覽次數&nbsp;<span id="busuanzi_value_site_pv"></span>
+      </span>
+      <br>
+      <br>
+
+      &copy; 2023 Ferris Huang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
